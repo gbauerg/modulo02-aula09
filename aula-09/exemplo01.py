@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-
 # obtendo os dados
 try:
     print("Obtendo os dados...")
@@ -86,28 +85,18 @@ try:
 except Exception as j:
     print(f"Erro ao calcular os quartis {j}")
 
-try:
-    print("\nCalculando a Amplitude")
 
-    maior_valor = np.max(array_roubo_veiculo)
-    print(f"Maior Valor: {maior_valor}")
-
-    menor_valor = np.min(array_roubo_veiculo)
-    print(f"Menor Valor: {menor_valor}")
-
-    amplitude_total = maior_valor - menor_valor
-    print(f"Amplitude Total: {amplitude_total}")
-
-except Exception as m:
-    print(f"Erro ao calcular a amplitude: {e}")
 
 try:
-    print(f"\nCalculando Outliers")
     iqr = q3 - q1
-    print(f"\nIQR: {iqr}")
+    print(iqr)
 
     lim_superior = q3 + (1.5 * iqr)
     lim_inferior = q1 - (1.5 * iqr)
+
+    maximo = np.max(array_roubo_veiculo)
+    minimo = np.min(array_roubo_veiculo)
+    amplitude = maximo - minimo
 
     print(f"\nLimite Superior: {lim_superior}") 
     print(f"Limite Inferior: {lim_inferior}")  
@@ -123,7 +112,7 @@ try:
         print(df_roubo_veiculos_outliers_menores)
 
 
-    df_roubo_veiculos_outliers_maiores = (df_roubo_veiculos[df_roubo_veiculos["roubo_veiculo"] > lim_superior])
+    df_roubo_veiculos_outliers_maiores = (df_roubo_veiculos[df_roubo_veiculos["roubo_veiculo"] < lim_superior])
     print(df_roubo_veiculos_outliers_maiores)
 
     print("\nMunicipios com outliers superiores:")
@@ -138,13 +127,39 @@ except Exception as n:
     print(f"Erro ao calcular outliers {n}")
 
 try:
-    print(f"\nPlotando Gráfico...")
+    print('\nInformações de Roubos de Veículos')
+    plt.figure(figsize=(16, 10))
 
-    plt.boxplot(df_roubo_veiculos['roubo_veiculo'], orientation="horizontal", showfliers=False)
+
+   
+    plt.subplot(1, 2, 1)
+
+    plt.boxplot(df_roubo_veiculos['roubo_veiculo'], orientation='horizontal', showmeans=True)
+    plt.title('Distribuição dos dados')
+    plt.xlabel('Roubo de Veículos')
+
+
+
+    plt.subplot(1, 2, 2)
+    plt.text(0.1, 0.95, f'Limite Inferior: {lim_inferior}', fontsize=12)
+    plt.text(0.1, 0.90, f'Mínimo: {minimo}', fontsize=12)
+    plt.text(0.1, 0.85, f'Q1: {q1}', fontsize=12)
+    plt.text(0.1, 0.80, f'Q2: {q2}', fontsize=12)
+    plt.text(0.1, 0.75, f'Q3: {q3}', fontsize=12)
+    plt.text(0.1, 0.70, f'Limite Superior: {lim_superior}', fontsize=12)
+    plt.text(0.1, 0.65, f'Máximo: {maximo}', fontsize=12)
+
+    plt.text(0.1, 0.55, f'Mediana: {mediana_roubo}', fontsize=12)
+    plt.text(0.1, 0.50, f'Média: {media_roubo}', fontsize=12)
+    plt.text(0.1, 0.45, f'IQR Intervalo Interquartil: {iqr}', fontsize=12)
+    plt.text(0.1, 0.40, f'Amplitude Total: {amplitude}', fontsize=12)
+    plt.text(0.1, 0.35, f'Distância: {distancia}', fontsize=12)
+    plt.axis('off')
     
+    
+    plt.suptitle('Informações sobre Roubos de Veículos') 
+
     plt.show()
 
-
-
-except Exception as n:
-    print(f"Erro ao plotar grafico {n}")
+except Exception as e:
+    print(f'Erro ao plotar o grafico: {e}')
